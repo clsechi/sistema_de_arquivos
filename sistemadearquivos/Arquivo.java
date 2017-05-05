@@ -7,50 +7,49 @@ import java.util.Date;
 
 public class Arquivo implements Serializable{
     
-    private String nome;
-    private byte[] conteudo;
-    private long tamanhoKB;
-    private Date dataHoraUpload;
-    private String diretorioDestino;
+    private static String nome;
+    private static byte[] conteudo;
+    private static long tamanhoKB;
+    private static Date dataHoraUpload;
+    private static String diretorioDestino;
 
-    public String getNome() {
+    public static String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public static void setNome(String nome) {
+        Arquivo.nome = nome;
     }
 
-    public byte[] getConteudo() {
+    public static byte[] getConteudo() {
         return conteudo;
     }
 
-    public void setConteudo(byte[] conteudo) {
-        this.conteudo = conteudo;
+    public static void setConteudo(byte[] conteudo) {
+        Arquivo.conteudo = conteudo;
     }
 
-    public long getTamanhoKB() {
+    public static long getTamanhoKB() {
         return tamanhoKB;
     }
 
-    public void setTamanhoKB(long tamanhoKB) {
-        this.tamanhoKB = tamanhoKB;
+    public static void setTamanhoKB(long tamanhoKB) {
+        Arquivo.tamanhoKB = tamanhoKB;
     }
 
-    public Date getDataHoraUpload() {
+    public static Date getDataHoraUpload() {
         return dataHoraUpload;
     }
 
-    public void setDataHoraUpload(Date dataHoraUpload) {
-        this.dataHoraUpload = dataHoraUpload;
+    public static void setDataHoraUpload(Date dataHoraUpload) {
+        Arquivo.dataHoraUpload = dataHoraUpload;
     }
 
-    public String getDiretorioDestino() {
+    public static String getDiretorioDestino() {
         return diretorioDestino;
     }
 
-    public void setDiretorioDestino(String diretorioDestino) {
-        this.diretorioDestino = diretorioDestino;
-    }  
-    
+    public static void setDiretorioDestino(String diretorioDestino) {
+        Arquivo.diretorioDestino = diretorioDestino;
+    }    
 }

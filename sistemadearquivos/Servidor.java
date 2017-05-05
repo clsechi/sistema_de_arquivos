@@ -13,13 +13,43 @@ public class Servidor {
     
     public Servidor() {
         try {
-            serversocket = new ServerSocket(9600);
+            serversocket = new ServerSocket(9601);
             System.out.println("Engines On!!!");
             System.out.println("Waiting resquest...");            
         } catch (Exception e){
             System.out.println("Nao criei o server socket...");
         }            
 }
+    
+    public static void main(String args[]){
+        
+        while(true){
+            if(connect()){
+                
+            } else {
+                try {
+                    serversocket.close();
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Nao desconectei...");
+                }                
+            }
+            
+        }
+        
+        
+    }
+    
+    static boolean connect() {
+        
+        try {
+            cliente_socket = serversocket.accept();
+            return true;
+        } catch (Exception e) {
+            System.out.println("Erro de connect..." + e.getMessage());
+            return false;
+        }
+    }
     
     //portas diferente para cada servidor
     
