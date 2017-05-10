@@ -10,6 +10,7 @@ public class Controlador {
     static Socket client_socket;
     static Conexao c;
     static Socket server1, server2, server3;
+    static int lastServer = 0;
     
     
     public Controlador() {
@@ -36,14 +37,56 @@ public class Controlador {
     }
     
     public static void main(String args[]){
-        Arquivo arquivo;   
+        Arquivo arquivo;
+        Requisicao req = new Requisicao();
+        Resposta resp = new Resposta();
+        
         new Controlador();
         
         while(true){
+            int option;
+            Socket server;
             if(connect()){               
                                 
-                arquivo = (Arquivo) c.receive(client_socket);
-                System.out.println("Teste" + arquivo.getNome());
+                req = (Requisicao) c.receive(client_socket);
+                //arquivo = req.getArquivo();
+                //System.out.println("Teste" + arquivo.getNome());
+                //pega a operação desejada
+                option = req.getOption();
+                
+                switch (option) {
+                    case 1:
+                        //lista
+                        
+                        //chama o metodo para baleancear os servidores
+                        server = balance();
+                        //ultimo servidor utilizado
+                        lastServer = server.toString().charAt(6);
+                        
+                        //envia para o servidor
+                        c.send(server, req);
+                        
+                        //recebe a resposta do servidor
+                        resp = (Resposta) c.receive(server);
+                        
+                        //envia a resposta para o cliente
+                        c.send(client_socket, resp);
+                        
+                        break;
+                    case 2:
+                        //remover
+                        
+                        break;
+                    case 3:
+                        //gravar
+                        
+                        break;
+                    case 4:
+                        //ler
+                        
+                        break;
+                }              
+
                 
             } else {
                 try {
@@ -70,4 +113,14 @@ public class Controlador {
         }
     }
     
+    static Socket balance(){        
+        switch (lastServer) {
+            case 1:
+                return server2;
+            case 2:
+                return server3;
+            default:
+                return server1;
+        }
+    }
 }

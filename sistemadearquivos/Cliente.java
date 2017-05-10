@@ -14,6 +14,8 @@ public class Cliente {
     static Socket socket;
     private Arquivo arquivo;
     Scanner scn = new Scanner(System.in);
+    Requisicao req;
+    Resposta resp;
     
     public Cliente() {
         try {
@@ -48,11 +50,11 @@ public class Cliente {
     
     public void DefineMsgs(int opr){
         //int opr = Menu();
-        int status = 0;
+        //int status = 0;
         
         switch (opr) {
             case 1 :
-                status = ListarArquivos();
+                ListarArquivos();
                 break;
             case 2 :
                 RemoverArquivo();
@@ -65,11 +67,7 @@ public class Cliente {
                 break;
         }
         
-        if (status == 0){
-            System.out.println("Solicitação concluída com sucesso");
-        } else {
-            System.out.println("Solicitação não pode ser realizada");
-        }
+        
     }
     
     
@@ -97,10 +95,12 @@ public class Cliente {
             long kbSize = ArquivoEscolhido.length() / 1024;
             
             arquivo = new Arquivo();
+            req = new Requisicao();
             arquivo.setConteudo(byteFile);
             arquivo.setDataHoraUpload(new Date());
             arquivo.setNome(ArquivoEscolhido.getName());
             arquivo.setTamanhoKB(kbSize);
+            req.setOption(3);
             
             c.send(socket, arquivo);
             
@@ -111,16 +111,39 @@ public class Cliente {
        
     }
     
-    private int ListarArquivos() {
-        System.out.println("*** Listar Arquivos *** ");
-        
+    private void ListarArquivos() {
+        System.out.println("*** Listar Arquivos *** ");        
+        String[] lista;
+        int status;
         //listar todos os arquivos???
+        //arquivo = new Arquivo();
+        req = new Requisicao();       
+        req.setOption(1);
         
-        return 0;
+        c.send(socket, req);
+        
+        resp = (Resposta) c.receive(socket);
+        
+        status = resp.getStatus();
+        
+        if(status == 0 ){
+            lista = resp.getLista();
+            
+            for (int i = 0; i < lista.length; i++) {
+                System.out.println(lista[i]);
+            }
+            System.out.println("\nSolicitação concluída com sucesso!");
+        } else {            
+            System.out.println("Solicitação não pode ser realizada!");            
+        }       
     }
     
     private void RemoverArquivo() {
         System.out.println("*** Remoção de Arquivo *** ");
+        
+        arquivo = new Arquivo();
+        req = new Requisicao();
+        req.setOption(2);
         
         String FileName;
         
@@ -137,6 +160,10 @@ public class Cliente {
     
     private void LerArquivo() {
         System.out.println("*** Ler Arquivo *** ");
+        
+        arquivo = new Arquivo();
+        req = new Requisicao();
+        req.setOption(4);
         
         String FileName;
         
