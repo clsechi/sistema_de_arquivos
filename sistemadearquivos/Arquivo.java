@@ -7,49 +7,54 @@ import java.util.Date;
 
 public class Arquivo implements Serializable{
     
-    private static String nome;
-    private static byte[] conteudo;
-    private static long tamanhoKB;
-    private static Date dataHoraUpload;
-    private static String diretorioDestino;
+    private String nome;
+    private byte[] conteudo;
+    private long tamanhoKB;
+    private Date dataHoraUpload;
+    private String diretorioDestino;
 
-    public static String getNome() {
+    public Arquivo() {
+        
+    }  
+    
+    public String getNome() {
         return nome;
     }
-
-    public static void setNome(String nome) {
-        Arquivo.nome = nome;
+    
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-
-    public static byte[] getConteudo() {
+    
+    public byte[] getConteudo() {
         return conteudo;
     }
-
-    public static void setConteudo(byte[] conteudo) {
-        Arquivo.conteudo = conteudo;
+    
+    public void setConteudo(byte[] conteudo) {
+        this.conteudo = conteudo;
     }
-
-    public static long getTamanhoKB() {
+    
+    public long getTamanhoKB() {
         return tamanhoKB;
     }
-
-    public static void setTamanhoKB(long tamanhoKB) {
-        Arquivo.tamanhoKB = tamanhoKB;
+    
+    public void setTamanhoKB(long tamanhoKB) {
+        this.tamanhoKB = tamanhoKB;
     }
-
-    public static Date getDataHoraUpload() {
+    
+    public Date getDataHoraUpload() {
         return dataHoraUpload;
     }
-
-    public static void setDataHoraUpload(Date dataHoraUpload) {
-        Arquivo.dataHoraUpload = dataHoraUpload;
+    
+    public void setDataHoraUpload(Date dataHoraUpload) {
+        this.dataHoraUpload = dataHoraUpload;
     }
-
-    public static String getDiretorioDestino() {
+    
+    public String getDiretorioDestino() {
         return diretorioDestino;
     }
-
-    public static void setDiretorioDestino(String diretorioDestino) {
-        Arquivo.diretorioDestino = diretorioDestino;
-    }    
+    
+    public void setDiretorioDestino(String diretorioDestino) {
+        this.diretorioDestino = diretorioDestino;
+    }
+    
 }
