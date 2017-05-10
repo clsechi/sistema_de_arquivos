@@ -27,9 +27,11 @@ public class Controlador {
         
         try {
             server1 = new Socket("localhost", 9601);
-            System.out.println("Server 1 conectado");
+            System.out.println( server1.getLocalAddress() + "/" + server1.getPort() +  " conectado");
             server2 = new Socket("localhost", 9602);
+            System.out.println( server2.getLocalAddress() + "/" + server2.getPort() +  " conectado");
             server3 = new Socket("localhost", 9603);
+            System.out.println( server3.getLocalAddress() + "/" + server3.getPort() +  " conectado");
         } catch (Exception e) {
             System.out.println("Nao consegui conectar aos servidores");
         }
@@ -37,56 +39,97 @@ public class Controlador {
     }
     
     public static void main(String args[]){
-        Arquivo arquivo;
-        Requisicao req = new Requisicao();
-        Resposta resp = new Resposta();
+        //Arquivo arquivo;
+        Requisicao req;
+        Resposta resp;
+        
+        //boolean AllServersOn = server1.isConnected() && server2.isConnected() && server3.isConnected();
         
         new Controlador();
         
         while(true){
+            
             int option;
             Socket server;
-            if(connect()){               
-                                
-                req = (Requisicao) c.receive(client_socket);
-                //arquivo = req.getArquivo();
-                //System.out.println("Teste" + arquivo.getNome());
-                //pega a operação desejada
-                option = req.getOption();
-                
-                switch (option) {
-                    case 1:
-                        //lista
-                        
-                        //chama o metodo para baleancear os servidores
-                        server = balance();
-                        //ultimo servidor utilizado
-                        lastServer = server.toString().charAt(6);
-                        
-                        //envia para o servidor
-                        c.send(server, req);
-                        
-                        //recebe a resposta do servidor
-                        resp = (Resposta) c.receive(server);
-                        
-                        //envia a resposta para o cliente
-                        c.send(client_socket, resp);
-                        
-                        break;
-                    case 2:
-                        //remover
-                        
-                        break;
-                    case 3:
-                        //gravar
-                        
-                        break;
-                    case 4:
-                        //ler
-                        
-                        break;
-                }              
+            if(connect()){
+                if(true){
+                    //req = new Requisicao();
+                    
+                    
+                    req = (Requisicao) c.receive(client_socket);
+                    //arquivo = req.getArquivo();
+                    //System.out.println("Teste" + arquivo.getNome());
+                    
+                    //pega a operação desejada
+                    option = req.getOption();
+                    
+                    switch (option) {
+                        case 1:
+                            //lista
 
+                            //chama o metodo para baleancear os servidores
+                            server = balance();
+                            //ultimo servidor utilizado
+                            lastServer = server.toString().charAt(6);
+                            
+                            //envia para o servidor
+                            c.send(server1, req);
+                            //recebe a resposta do servidor
+                            resp = (Resposta) c.receive(server1);
+                            //envia a resposta para o cliente
+                            c.send(client_socket, resp);
+                            
+                            break;
+                        case 2:
+                            //remover
+                            
+                            //envia para o servidor
+                            c.send(server1, req);
+                            //recebe a resposta do servidor
+                            resp = (Resposta) c.receive(server1);
+                            
+                            if (resp.getStatus() == 0){
+                                //remove dos outros servidores
+                                req.setOption(5);
+                                c.send(server2, req);
+                                c.send(server3, req);
+                            }
+                            
+                            //envia a resposta para o cliente
+                            c.send(client_socket, resp);
+                            
+                            break;
+                        case 3:
+                            //gravar
+                            
+                            //envia para o servidor
+                            c.send(server1, req);
+                            //recebe a resposta do servidor
+                            resp = (Resposta) c.receive(server1);
+                            //envia a resposta para o cliente
+                            c.send(client_socket, resp);
+                            
+                            break;
+                        case 4:
+                            //ler
+                            
+                            //envia para o servidor
+                            c.send(server1, req);
+                            //recebe a resposta do servidor
+                            resp = (Resposta) c.receive(server1);
+                            //envia a resposta para o cliente
+                            c.send(client_socket, resp);
+                            
+                            break;
+                    }
+                } else {
+                    //servidores offline
+                    
+                    resp = new Resposta();
+                    //falta mostrar a msg de erro
+                    resp.setStatus(2);
+                    c.send(client_socket, resp);
+                }
                 
             } else {
                 try {

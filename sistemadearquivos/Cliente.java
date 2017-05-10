@@ -121,25 +121,28 @@ public class Cliente {
         req.setOption(1);
         
         c.send(socket, req);
-        
+
         resp = (Resposta) c.receive(socket);
         
         status = resp.getStatus();
-        
+
         if(status == 0 ){
             lista = resp.getLista();
+            
+            System.out.println("Arquivos no diretório:");
             
             for (int i = 0; i < lista.length; i++) {
                 System.out.println(lista[i]);
             }
             System.out.println("\nSolicitação concluída com sucesso!");
         } else {            
-            System.out.println("Solicitação não pode ser realizada!");            
+            System.out.println("Solicitação não pode ser realizada! Servidor Offline...");            
         }       
     }
     
     private void RemoverArquivo() {
         System.out.println("*** Remoção de Arquivo *** ");
+        int status;
         
         arquivo = new Arquivo();
         req = new Requisicao();
@@ -154,7 +157,24 @@ public class Cliente {
         //envio do objeto
         arquivo = new Arquivo();
         arquivo.setNome(FileName);        
-        c.send(socket, arquivo);      
+        c.send(socket, arquivo);
+        
+        resp = (Resposta) c.receive(socket);
+        
+        status = resp.getStatus();
+        
+        switch (status) {
+            case 0:
+                System.out.println("O aquivo " + FileName + " foi removido com sucesso!");
+                
+                break;
+            case 3:
+                System.out.println("Q arquivo "+ FileName +" não encontrado!");
+                break;
+            default:
+                System.out.println("Solicitação não pode ser realizada! Servidor Offline...");
+                break;
+        }
         
     }
     
