@@ -1,18 +1,15 @@
 package sistemadearquivos;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.Socket;
 import java.util.Date;
 import java.util.Scanner;
-import javax.swing.JFileChooser;
 
 public class Cliente {
     
     static Conexao c;
     
     static Socket socket;
-    private Arquivo arquivo;
+    //private Arquivo arquivo;
     Scanner scn = new Scanner(System.in);
     Requisicao req;
     Resposta resp;
@@ -49,8 +46,6 @@ public class Cliente {
     }
     
     public void DefineMsgs(int opr){
-        //int opr = Menu();
-        //int status = 0;
         
         switch (opr) {
             case 1 :
@@ -68,50 +63,81 @@ public class Cliente {
         }
         
         
-    }
+    }   
     
-    
-    
-    private void GravarArquivo(){
-        System.out.println("*** Gravação de Arquivo ***");
-        
-        try{
-            FileInputStream fis;
+    private void GravarArquivo(){ //OK
+            System.out.println("*** Gravação de Arquivo ***");
             
-            SistemaDeArquivos sis = new SistemaDeArquivos();
-            JFileChooser chooser = sis.Escolha();
+            String FileName, FileBody;
+                        
+            System.out.println("Insira o nome no arquivo:");
+            FileName = scn.next();
             
-            /*chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setDialogTitle("Escolha o arquivo");
-            chooser.showOpenDialog(chooser);//abre a janela*/
+            System.out.println("Insira o conteúdo do arquivo");
+            FileBody = scn.next();
+ 
+            //arquivo = new Arquivo();
+            req = new Requisicao();            
             
-            File ArquivoEscolhido = chooser.getSelectedFile();
+            req.setNome(FileName);
+            req.setConteudo(FileBody);
+            //req.setDataHoraUpload(new Date());
             
-            byte[] byteFile = new byte[(int) ArquivoEscolhido.length()];
-            fis = new FileInputStream(ArquivoEscolhido);
-            fis.read(byteFile);
-            fis.close();
-            
-            long kbSize = ArquivoEscolhido.length() / 1024;
-            
-            arquivo = new Arquivo();
-            req = new Requisicao();
-            arquivo.setConteudo(byteFile);
-            arquivo.setDataHoraUpload(new Date());
-            arquivo.setNome(ArquivoEscolhido.getName());
-            arquivo.setTamanhoKB(kbSize);
             req.setOption(3);
             
-            c.send(socket, arquivo);
+            c.send(socket, req);
             
-        } catch (Exception e ){
-            e.printStackTrace();
-        }
-        
-       
+            resp = (Resposta) c.receive(socket);
+            
+            int status = resp.getStatus();
+            
+            if(status == 0 ){
+                System.out.println("Arquivo " + FileName + " gravado no diretório:");                                          
+
+                System.out.println("\nSolicitação concluída com sucesso!");
+            } else {
+                System.out.println("Solicitação não pode ser realizada! Servidor Offline...");
+            }
+            
+            
     }
     
-    private void ListarArquivos() {
+    private void LerArquivo() { //OK
+        System.out.println("*** Ler Arquivo *** ");
+        
+        //arquivo = new Arquivo();
+        req = new Requisicao();
+        req.setOption(4);
+        
+        String FileName;
+        
+        System.out.println("Digite o nome do arquivo que deseja ler:");
+        FileName = scn.next();
+        
+        req.setNome(FileName);
+        
+        c.send(socket, req);
+        
+        resp = (Resposta) c.receive(socket);
+        
+        int status = resp.getStatus();
+        
+        switch (status) {
+            case 0:
+                System.out.println("Nome do arquivo: " + resp.getNome());
+                System.out.println("Conteudo: " + resp.getConteudo());
+                System.out.println("\nSolicitação concluída com sucesso!");
+                break;
+            case 3:
+                System.out.println("\nArquivo não encontrado!");
+                break;
+            default:
+                System.out.println("\nSolicitação não pode ser realizada! Servidor Offline...");
+                break;
+        }
+    }
+    
+    private void ListarArquivos() { // OK
         System.out.println("*** Listar Arquivos *** ");        
         String[] lista;
         int status;
@@ -136,28 +162,26 @@ public class Cliente {
             }
             System.out.println("\nSolicitação concluída com sucesso!");
         } else {            
-            System.out.println("Solicitação não pode ser realizada! Servidor Offline...");            
+            System.out.println("\nSolicitação não pode ser realizada! Servidor Offline...");            
         }       
     }
     
-    private void RemoverArquivo() {
+    private void RemoverArquivo() { //OK
         System.out.println("*** Remoção de Arquivo *** ");
         int status;
         
-        arquivo = new Arquivo();
+        //arquivo = new Arquivo();
         req = new Requisicao();
         req.setOption(2);
         
         String FileName;
         
-        System.out.println("Digite o nome do arquivo que deseja remover");
-        FileName = scn.next();
-        
+        System.out.println("Digite o nome do arquivo que deseja remover:");
+        FileName = scn.next();        
         
         //envio do objeto
-        arquivo = new Arquivo();
-        arquivo.setNome(FileName);        
-        c.send(socket, arquivo);
+        req.setNome(FileName);        
+        c.send(socket, req);
         
         resp = (Resposta) c.receive(socket);
         
@@ -169,29 +193,12 @@ public class Cliente {
                 
                 break;
             case 3:
-                System.out.println("Q arquivo "+ FileName +" não encontrado!");
+                System.out.println("\nO arquivo "+ FileName +" não foi encontrado!");
                 break;
             default:
-                System.out.println("Solicitação não pode ser realizada! Servidor Offline...");
+                System.out.println("\nSolicitação não pode ser realizada! Servidor Offline...");
                 break;
         }
         
-    }
-    
-    private void LerArquivo() {
-        System.out.println("*** Ler Arquivo *** ");
-        
-        arquivo = new Arquivo();
-        req = new Requisicao();
-        req.setOption(4);
-        
-        String FileName;
-        
-        System.out.println("Digite o nome do arquivo que deseja ler");
-        FileName = scn.next();
-        
-        
-    }
-    
-    
+    } 
 }

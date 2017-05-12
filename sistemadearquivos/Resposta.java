@@ -12,7 +12,24 @@ public class Resposta implements Serializable{
     
     private String lista[];
     private int status;
-    private Arquivo arquivo;
+    private String nome;
+    private String conteudo;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(String conteudo) {
+        this.conteudo = conteudo;
+    }
 
     public String[] getLista() {
         return lista;
@@ -28,14 +45,6 @@ public class Resposta implements Serializable{
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public Arquivo getArquivo() {
-        return arquivo;
-    }
-
-    public void setArquivo(Arquivo arquivo) {
-        this.arquivo = arquivo;
     }
     
     

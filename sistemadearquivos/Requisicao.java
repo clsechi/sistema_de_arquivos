@@ -9,15 +9,25 @@ public class Requisicao implements Serializable{
         
     }
     
-    private Arquivo arquivo;    
+    //private Arquivo arquivo;    
     private int option;
+    private String nome;
+    private String conteudo;    
 
-    public Arquivo getArquivo() {
-        return arquivo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setArquivo(Arquivo arquivo) {
-        this.arquivo = arquivo;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(String conteudo) {
+        this.conteudo = conteudo;
     }
 
     public int getOption() {

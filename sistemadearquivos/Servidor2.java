@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-public class Servidor {
+public class Servidor2 {
     
     static ServerSocket serversocket;
     static Socket controlador_socket;
@@ -24,7 +24,7 @@ public class Servidor {
     
     // cada servidor tem uma pasta e uma porta separadas
 
-    public Servidor(int porta) {
+    public Servidor2 (int porta) {
         try {
             serversocket = new ServerSocket(porta);
             System.out.println("Engines On!!! " + porta);
@@ -34,7 +34,7 @@ public class Servidor {
         }
         
         if ("linux".equals(OS)){
-            pasta = "/home/carlos/testes_java/server1";
+            pasta = "/home/carlos/testes_java/server2";
         } else {
             pasta = "C:" + File.separator + "Users" + File.separator + "lab653" + File.separator + "Documents" + File.separator + "testes_java";
         }      
@@ -44,7 +44,7 @@ public class Servidor {
         Requisicao req;
         Resposta resp;       
 
-        new Servidor (9601);
+        new Servidor2 (9602);
         
         while(true){
             int option;

@@ -11,6 +11,7 @@ public class Controlador {
     static Conexao c;
     static Socket server1, server2, server3;
     static int lastServer = 0;
+    static boolean AllServersOn = true;
     
     
     public Controlador() {
@@ -34,17 +35,15 @@ public class Controlador {
             System.out.println( server3.getLocalAddress() + "/" + server3.getPort() +  " conectado");
         } catch (Exception e) {
             System.out.println("Nao consegui conectar aos servidores");
+            AllServersOn = false;            
         }
         
     }
     
     public static void main(String args[]){
-        //Arquivo arquivo;
         Requisicao req;
         Resposta resp;
-        
-        //boolean AllServersOn = server1.isConnected() && server2.isConnected() && server3.isConnected();
-        
+
         new Controlador();
         
         while(true){
@@ -52,13 +51,9 @@ public class Controlador {
             int option;
             Socket server;
             if(connect()){
-                if(true){
-                    //req = new Requisicao();
-                    
-                    
+                if(AllServersOn){
+
                     req = (Requisicao) c.receive(client_socket);
-                    //arquivo = req.getArquivo();
-                    //System.out.println("Teste" + arquivo.getNome());
                     
                     //pega a operação desejada
                     option = req.getOption();
@@ -73,9 +68,9 @@ public class Controlador {
                             lastServer = server.toString().charAt(6);
                             
                             //envia para o servidor
-                            c.send(server1, req);
+                            c.send(server, req);
                             //recebe a resposta do servidor
-                            resp = (Resposta) c.receive(server1);
+                            resp = (Resposta) c.receive(server);
                             //envia a resposta para o cliente
                             c.send(client_socket, resp);
                             
@@ -106,6 +101,15 @@ public class Controlador {
                             c.send(server1, req);
                             //recebe a resposta do servidor
                             resp = (Resposta) c.receive(server1);
+                            
+                            //replica nos outros servidores
+                            if (resp.getStatus() == 0){
+                                /*
+                                req.setOption(5);
+                                c.send(server2, req);
+                                c.send(server3, req);*/
+                            }                            
+                            
                             //envia a resposta para o cliente
                             c.send(client_socket, resp);
                             
@@ -165,5 +169,11 @@ public class Controlador {
             default:
                 return server1;
         }
+    }
+    
+    static boolean Servers(){
+        
+        
+        return false;
     }
 }
